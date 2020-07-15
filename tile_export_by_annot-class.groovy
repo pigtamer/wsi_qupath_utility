@@ -19,7 +19,7 @@ import static qupath.lib.gui.scripting.QPEx.*
 import groovy.util.FileTreeBuilder
 
 def server = getCurrentServer()
-def downsample = 4.0
+def downsample = 1.0
 /*
 Tree:
 
@@ -76,6 +76,7 @@ for (stain_name in stain_types) {
         it.writeObject(annotations)
     }
     // Write tiles
+    def o=0
     for (pathObject in Objects) {
         print(pathObject)
         if (pathObject.hasChildren()) {
@@ -92,12 +93,16 @@ for (stain_name in stain_types) {
                 def sizey = roi.getBoundsHeight()
                 def sizex = roi.getBoundsWidth()
                 requestedTile = RegionRequest.createInstance(server.getPath(), downsample, roi)
-                name = "${ProjBaseDir}${stain_name}/${WSI_ID}/Tiles/${className}/${k}_${WSI_ID}${stain_name}_(d=$downsample, x=$sx, y=$sy, w=$sizex, h=$sizey, z=${k}).tif".toString()
+                name = "${ProjBaseDir}${stain_name}/${WSI_ID}/Tiles/${className}/${o}_${k}_${WSI_ID}${stain_name}_(d=$downsample, x=$sx, y=$sy, w=$sizex, h=$sizey, z=${k}).tif".toString()
                 print(roi)
                 writeImageRegion(server, requestedTile, name)
                 k += 1
+                if (k > 11) {
+                    break
+                }
             }
         }
+        o += 1
     }
 }
 
