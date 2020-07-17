@@ -22,7 +22,6 @@ if not (os.path.exists(target_path)):
 
 for roots, dirs, files in os.walk(orig_path):
     for root, file in zip(roots, files):
-        #  with open(os.path.join(root, file), "r") as auto:
         filepath = os.path.join(roots, file)
 
         if (".tif" in filepath):
@@ -36,5 +35,5 @@ for roots, dirs, files in os.walk(orig_path):
                                     j * target_shape['y']:(j + 1) * target_shape['y'],
                                     :]
                     new_path = roots.replace(dataset_name, dataset_name + "_(%s, %s)" % (target_shape['x'], target_shape['y']))+ "/" + os.path.splitext(file)[0] + "(%d, %d)" % (i, j) + ".tif"
-                    print(new_path)
-                    # cv.imwrite(new_path, chip)
+                    # print(new_path)
+                    cv.imwrite(new_path, chip)

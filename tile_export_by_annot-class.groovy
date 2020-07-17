@@ -97,7 +97,7 @@ for (stain_name in stain_types) {
                 print(roi)
                 writeImageRegion(server, requestedTile, name)
                 k += 1
-                if (k > 11) {
+                if (k > 5) {
                     break
                 }
             }
