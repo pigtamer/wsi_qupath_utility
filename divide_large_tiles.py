@@ -5,8 +5,8 @@ import shutil as shu
 print("-*"*20)
 target_shape = {'x': 256, 'y': 256}
 
-dataset_name = "Kimura"
-orig_path = "/Users/cunyuan/code/play/%s/" % dataset_name
+dataset_name = "TILES"
+orig_path = "/home/cunyuan/DATA/Kimura/%s/" % dataset_name
 print(orig_path)
 target_path = orig_path[:-1] + \
     "_(%s, %s)" % (target_shape['x'], target_shape['y']) + "/"
@@ -21,7 +21,7 @@ if not (os.path.exists(target_path)):
     shu.copytree(orig_path, target_path, ignore=ig_f)
 
 for roots, dirs, files in os.walk(orig_path):
-    for root, file in zip(roots, files):
+    for file in files:
         filepath = os.path.join(roots, file)
 
         if (".tif" in filepath):
@@ -36,4 +36,5 @@ for roots, dirs, files in os.walk(orig_path):
                                     :]
                     new_path = roots.replace(dataset_name, dataset_name + "_(%s, %s)" % (target_shape['x'], target_shape['y']))+ "/" + os.path.splitext(file)[0] + "(%d, %d)" % (i, j) + ".tif"
                     # print(new_path)
+                    # print(roots)
                     cv.imwrite(new_path, chip)

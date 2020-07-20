@@ -1,6 +1,6 @@
 //This is actually two scripts, the first should be run in the image you are copying from
 //and the second in the image you are copying to.
-def MODE = "EXPORT" // export annotations to text file by default
+def MODE = "IMPORT" // export annotations to text file by default
 
 if(MODE != "IMPORT") {
 //Export section
@@ -17,7 +17,8 @@ if(MODE != "IMPORT") {
 //Swap images and run the second set of code using the file name generated in the first half of the code.
 
 // Current path works for an image that has the same name as the original image, but you can adjust that.
-
+    clearAllObjects()
+    
     def path = buildFilePath(PROJECT_BASE_DIR, 'annotations-' + getProjectEntry().getImageName() + '.txt')
     def annotations = null
     new File(path).withObjectInputStream {
