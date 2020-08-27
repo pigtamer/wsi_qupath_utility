@@ -1,9 +1,9 @@
 /**
  * Script to transfer QuPath objects from one image to another, applying an AffineTransform to any ROIs.
-
- More info on custom scripting:
+ Get the transform matrix from qupath interactive alignment
+ * 将 Qupath 的集合形标注做变换，用来原封不动地复制HE和IHC染色图像上的标注对象
+ More info on custom scripting: 修改自：
  https://gist.github.com/Svidro/5829ba53f927e79bb6e370a6a6747cfd
-
  */
 
 import qupath.lib.objects.PathCellObject
@@ -22,6 +22,8 @@ import static qupath.lib.gui.scripting.QPEx.*
 // Transformation matrix
 // Annotate on IHC, run on HE.
 // Trans. Mat. from HE to IHC. (Align with HE and open IHC)
+// 下面的一组变换是从HE到IHC到变换
+// 在交互配准窗口中*打开HE图像*后再选定IHC图像
 
 
 def he2ihcTransMatrices = [
@@ -45,7 +47,7 @@ def he2ihcTransMatrices = [
                              0.0000, 1.0000, 1468.9137] //ok
 ]
 
-def displayedNamesList = ['Tumor', 'Blood', 'Healthy Tissue']
+def displayedNamesList = ['Tumor', 'Blood', 'Healthy Tissue', 'Kimura_sample']
 
 // SET ME! Delete existing objects
 def deleteExisting = true

@@ -1,3 +1,11 @@
+！！本文件已过期！！
+
+/* Deprecated code
+input:
+    one WSI 一副图像
+    a transform matrix 一个变换矩阵
+不要求annot。只对**整个图像**导出所有tile。若有变换，则做变换
+  */
 import qupath.lib.roi.*
 import java.awt.geom.AffineTransform
 import qupath.lib.roi.interfaces.ROI

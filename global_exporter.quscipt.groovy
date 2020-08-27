@@ -1,5 +1,8 @@
 /**
+ * This is a qupath generic script (see "TileExporter")
  * Script to export image tiles (can be customized in various ways).
+
+ 本程序导出 WSI 中的所有tile。 如果给出变换矩阵，在导出前施加变换
  */
 
 import static org.bytedeco.opencv.global.opencv_core.print

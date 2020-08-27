@@ -1,6 +1,11 @@
 //This is actually two scripts, the first should be run in the image you are copying from
 //and the second in the image you are copying to.
-def MODE = "IMPORT" // export annotations to text file by default
+// 本文件用于将标注导出到文本文件或者从文本文件将标注导入到 Qupath 和 WSI 数据文件
+
+// Execute this file in Qupath
+// 注意本文件在 qupath 内执行
+
+def MODE = "EXPORT" // export annotations to text file by default
 
 if(MODE != "IMPORT") {
 //Export section

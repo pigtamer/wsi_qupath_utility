@@ -1,3 +1,7 @@
+""" 
+Divide large tiles to smaller tiles and save smaller ones separately
+将大 tile 分割成小的并另外保存
+ """
 import cv2 as cv
 import os
 import shutil as shu
@@ -34,7 +38,8 @@ for roots, dirs, files in os.walk(orig_path):
                     chip = im_large[i * target_shape['x']:(i + 1) * target_shape['x'],
                                     j * target_shape['y']:(j + 1) * target_shape['y'],
                                     :]
-                    new_path = roots.replace(dataset_name, dataset_name + "_(%s, %s)" % (target_shape['x'], target_shape['y']))+ "/" + os.path.splitext(file)[0] + "(%d, %d)" % (i, j) + ".tif"
+                    new_path = roots.replace(dataset_name, dataset_name + "_(%s, %s)" % (target_shape['x'], target_shape['y'])) +\
+                                "/" + os.path.splitext(file)[0] + "(%d, %d)" % (i, j) + ".tif"
                     # print(new_path)
                     # print(roots)
                     cv.imwrite(new_path, chip)
