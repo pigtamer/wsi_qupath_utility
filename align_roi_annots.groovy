@@ -18,13 +18,11 @@ import java.awt.geom.AffineTransform
 
 import static qupath.lib.gui.scripting.QPEx.*
 
-
 // Transformation matrix
 // Annotate on IHC, run on HE.
 // Trans. Mat. from HE to IHC. (Align with HE and open IHC)
 // 下面的一组变换是从HE到IHC到变换
 // 在交互配准窗口中*打开HE图像*后再选定IHC图像
-
 
 def he2ihcTransMatrices = [
         '01_17-7885_Ki67_': [1.0000, 0.0000, -4110.1113,
@@ -59,11 +57,11 @@ def createInverse = true
 for (WSI_ID in he2ihcTransMatrices.keySet()) {
     def matrix = he2ihcTransMatrices[WSI_ID]
 
-// Define image containing the original objects (must be in the current project)
-    def ihcAnnotImgName = WSI_ID + "IHC.ndpi"
-    def heTargetImgName = WSI_ID + "HE.ndpi"
+    // Define image containing the original objects (must be in the current project)
+    def ihcAnnotImgName = WSI_ID + 'IHC.ndpi'
+    def heTargetImgName = WSI_ID + 'HE.ndpi'
 
-// Get the project & the requested image name
+    // Get the project & the requested image name
     def project = getProject()
 
     def he_entry = project.getImageList().find { it.getImageName() == heTargetImgName }
@@ -77,7 +75,6 @@ for (WSI_ID in he2ihcTransMatrices.keySet()) {
         return
     }
 
-
     def heData = he_entry.readImageData()
     def heHierarchy = heData.getHierarchy()
 
@@ -85,7 +82,7 @@ for (WSI_ID in he2ihcTransMatrices.keySet()) {
     def ihcObjects = ihcHierarchy.getRootObject().getChildObjects()
 
     print ihcObjects
-// Define the transformation matrix
+    // Define the transformation matrix
     def transform = new AffineTransform(
             matrix[0] as double, matrix[3] as double, matrix[1] as double,
             matrix[4] as double, matrix[2] as double, matrix[5] as double
@@ -105,10 +102,10 @@ for (WSI_ID in he2ihcTransMatrices.keySet()) {
             newObjects << transformObject(pathObject, transform)
         }
     }
-//    addObjects(newObjects)
+    //    addObjects(newObjects)
     heHierarchy.addPathObjects(newObjects)
     he_entry.saveImageData(heData)
-    print(ihcAnnotImgName + " processed.")
+    print(ihcAnnotImgName + ' processed.')
 }
 
 print 'Done!'
@@ -159,6 +156,5 @@ ROI transformROI(ROI roi, AffineTransform transform) {
     shape2 = transform.createTransformedShape(shape)
     return RoiTools.getShapeROI(shape2, roi.getImagePlane(), 0.5)
 }
-
 
 def tile_size = 463.4624 //um
