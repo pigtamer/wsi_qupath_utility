@@ -4,13 +4,23 @@ options:
 2) Binary mask
  """
 
-import cv2 as cv
-import os
-import argparse
-import shutil as shu
+import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
+from mpl_toolkits.mplot3d.axes3d import Axes3D #--- For 3D plot
+
+import cv2 as cv
 from cv2 import ximgproc
 
+import os,glob
+import argparse
+import shutil as shu
+
+from skimage.color import rgb2hed, hed2rgb,separate_stains, combine_stains
+from skimage import data
+from skimage.exposure import rescale_intensity
+
+from pathlib import Path
 
 def reject_outliers(data, m=3):
     dt = data.copy()
@@ -175,8 +185,11 @@ def buildTree(phys_path, label_path="Prob"):
         Tumor
         ...
     """
+    def ig_f(dir, files):
+        return [f for f in files if (os.path.isfile(os.path.join(dir, f)) and (not (".txt" in os.path.join(dir, f))))]
+
     if not os.path.exists(phys_path):
-        shu.copytree(phys_path, label_path)
+        shu.copytree(phys_path, label_path, ignore=ig_f)
 
     """ get a list of last subdiretories in tiles. e.g. subdirs = [blood, tumor...]
     and a string that gives the absolute path of corresponding origin directory, 
@@ -194,7 +207,23 @@ def buildTree(phys_path, label_path="Prob"):
             ???.cp(image, target_dir + "/") # 如果要改文件名，在此前替换。如IHC_(1,2).tif ==> Mask_(1,2).tif
     """
 
-
+    """ 
+    TILES
+    └── HE
+        ├── 01_14-3768_Ki67_HE
+        │   ├── Annotations
+        │   │   └── annotations-01_14-3768_Ki67_HE.txt
+        │   └── Tiles
+        │       ├── Healthy Tissue [519 entries exceeds filelimit, not opening dir]
+        │       └── Tumor [1662 entries exceeds filelimit, not opening dir]
+        IHC
+        └── 01_14-3768_Ki67_IHC
+            ├── Annotations
+            │   └── annotations-01_14-3768_Ki67_IHC.txt
+            └── Tiles
+                ├── Healthy Tissue [519 entries exceeds filelimit, not opening dir]
+                └── Tumor [1662 entries exceeds filelimit, not opening dir]
+    """
 def parse_args():
     """parse input arguments
     """

@@ -5,7 +5,7 @@ Run for project!
 This script exports tiles from annotated WSIs in QuPath, only the annotation areas are considered
 Notice that the tiles belonging to different specimen classes will be stored in different directories
 
-本文件从 QUPath 导出tile。只处理标注的部分
+本文件从 QUPath 导出 tile 。只处理标注的部分
 对标为不同类别的区域，其 tile 将被存储到不同的目录中
  */
 

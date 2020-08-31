@@ -65,6 +65,7 @@ def unfold(dirname, N=None):
     """move files in subdirs (folds) out to the basedir
     dirname: base directory
     """
+    dirname = os.path.abspath(dirname)
     subfolders = [f.path for f in os.scandir(dirname) if (
         f.is_dir() and not os.path.basename(f).startswith('.'))]
     for subdir in subfolders:
@@ -83,7 +84,20 @@ def parse_args():
 
     parser.add_argument('src_dir',
                         help='source directory',
+                        type=str,
                         default="./TILES/")
+    parser.add_argument('depth',
+                        help='depth of diectory operations',
+                        type=int,
+                        default=100)
+    parser.add_argument('k',
+                        help='fold number',
+                        type=int,
+                        default=10)
+    parser.add_argument('mode',
+                        type=int,
+                        help='create fold/undo',
+                        default=None)
 
     return parser.parse_args()
 
@@ -113,13 +127,59 @@ def main():
     src_dir = args.src_dir  # "./sample_directory/"
 
     # Walk till the last hierachy of directory
-    execlevel(src_dir="./sample_directory/",
-              func=create_folds,
-              N=5,
-              depth=2)
+    if args.mode == 0:
+        func = unfold
+    elif args.mode == 1:
+        func = create_folds
+    else:
+        print(args.mode)
+        return 1
+
+    execlevel(basedir=src_dir,
+              func=func,
+              N=args.k,
+              depth=args.depth)
 
     return 0
 
 
 if __name__ == '__main__':
     main()
+
+
+""" 
+.
+└── mask
+    ├── annot
+    │   └── fooannot.annot
+    └── tile
+        ├── healthy
+        │   ├── 001 [27 entries exceeds filelimit, not opening dir]
+        │   ├── 002 [27 entries exceeds filelimit, not opening dir]
+        │   ├── 003 [27 entries exceeds filelimit, not opening dir]
+        │   ├── 004 [27 entries exceeds filelimit, not opening dir]
+        │   └── 005 [24 entries exceeds filelimit, not opening dir]
+        └── tumor
+            ├── 001 [21 entries exceeds filelimit, not opening dir]
+            ├── 002 [21 entries exceeds filelimit, not opening dir]
+            ├── 003 [21 entries exceeds filelimit, not opening dir]
+            ├── 004 [21 entries exceeds filelimit, not opening dir]
+            └── 005 [17 entries exceeds filelimit, not opening dir]
+
+python ../divide_k_fold.py ./mask/tile/ 1 5 0
+    ===
+        python ../divide_k_fold.py ./ 3 5 0
+
+===>
+
+.
+└── chips(same structure)
+........
+└── mask
+    ├── annot
+    │   └── fooannot.annot
+    └── tile
+        ├── healthy [132 entries exceeds filelimit, not opening dir]
+        └── tumor [101 entries exceeds filelimit, not opening dir]
+
+ """
