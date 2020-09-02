@@ -1,5 +1,6 @@
 
 import numpy as np
+import shutil as shu
 from numpy import *
 import cv2 as cv
 import os
@@ -14,14 +15,17 @@ from skimage.exposure import rescale_intensity
 from cv2 import ximgproc
 from pathlib import Path
 
-size = 256
+size = 2048
 zoom = "1.0"
 
-dpl = {"chips": "./TILES_(%d, %d)/HE/*/*/*" % (size, size),
-       "ihcs": "./TILES_(%d, %d)/IHC/*/*/*" % (size, size)}
-
-shu.copytree("./TILES_(%d, %d)/HE", "./TILES_(%d, %d)/DAB", ignore=ig_f)
-shu.copytree("./TILES_(%d, %d)/HE", "./TILES_(%d, %d)/Mask", ignore=ig_f)
+basepath = "/home/cunyuan/DATA/Kimura"
+basepath = "/home/cunyuan/4tb/Kimura/DATA"
+dpl = {"chips": basepath+ "/TILES_(%d, %d)/HE/*/*/*" % (size, size),
+       "ihcs": basepath+ "/TILES_(%d, %d)/IHC/*/*/*" % (size, size)}
+def ig_f(dir, files):
+    return [f for f in files if (os.path.isfile(os.path.join(dir, f)) and (not ("txt" in os.path.join(dir, f))))]
+#shu.copytree(basepath+ "/TILES_(%d, %d)/HE"% (size, size), basepath+ "/TILES_(%d, %d)/DAB"% (size, size), ignore=ig_f)
+#shu.copytree(basepath+ "/TILES_(%d, %d)/DAB"% (size, size), basepath+ "/TILES_(%d, %d)/Mask"% (size, size), ignore=ig_f)
 
 # %%
 H_DAB = array([
@@ -113,7 +117,7 @@ def surf(matIn, name="fig", div=(50, 50), SIZE=(8, 6)):
     plt.show()
 
 
-for dp in dpl.keys():
+for dp in ["ihcs"]:
     for imname in glob.glob(os.path.join(dpl[dp], '*.tif')):
         if dp == "chips":
             continue
@@ -189,10 +193,10 @@ for dp in dpl.keys():
 
 
             
-            # h1 = rescale_intensity(h, in_range=in_range(reject_outliers(h)))
-            # d1 = rescale_intensity(d, in_range=in_range(reject_outliers(d)))
-            h1= h
-            d1=d
+            h1 = rescale_intensity(h, in_range=in_range(reject_outliers(h)))
+            d1 = rescale_intensity(d, in_range=in_range(reject_outliers(d)))
+            #h1= h
+            #d1=d
             
             d2 = (d1*255).astype(uint8)
 
@@ -226,5 +230,5 @@ for dp in dpl.keys():
             if len(np.unique(gd.reshape(-1))) < 5:  # quantitize noise
                 gd *= 0
                 guidedDAB *= 0
-            plt.imsave(mask_level_dir.replace("IHC", "DAB"), gd, cmap="gray")
-            plt.imsave(mask_level_dir.replace("IHC", "Mask"), guidedDAB, cmap="gray")
+            plt.imsave(mask_level_dir.replace("IHC", "DAB").replace("_DAB", "_HE"), gd, cmap="gray")
+            plt.imsave(mask_level_dir.replace("IHC", "Mask").replace("_Mask", "_HE"), guidedDAB, cmap="gray")
