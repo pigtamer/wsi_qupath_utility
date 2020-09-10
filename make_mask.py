@@ -20,12 +20,13 @@ zoom = "1.0"
 
 basepath = "/home/cunyuan/DATA/Kimura"
 basepath = "/home/cunyuan/4tb/Kimura/DATA"
-dpl = {"chips": basepath+ "/TILES_(%d, %d)/HE/*/*/*" % (size, size),
-       "ihcs": basepath+ "/TILES_(%d, %d)/IHC/*/*/*" % (size, size)}
+dpl = {"chips": basepath+ "/TILES_(%d, %d)/HE/*/*/*/" % (size, size),
+       "ihcs": basepath+ "/TILES_(%d, %d)/IHC/*/*/*/" % (size, size)}
+print(dpl["chips"])
 def ig_f(dir, files):
     return [f for f in files if (os.path.isfile(os.path.join(dir, f)) and (not ("txt" in os.path.join(dir, f))))]
-#shu.copytree(basepath+ "/TILES_(%d, %d)/HE"% (size, size), basepath+ "/TILES_(%d, %d)/DAB"% (size, size), ignore=ig_f)
-#shu.copytree(basepath+ "/TILES_(%d, %d)/DAB"% (size, size), basepath+ "/TILES_(%d, %d)/Mask"% (size, size), ignore=ig_f)
+shu.copytree(basepath+ "/TILES_(%d, %d)/HE"% (size, size), basepath+ "/TILES_(%d, %d)/DAB"% (size, size), ignore=ig_f)
+shu.copytree(basepath+ "/TILES_(%d, %d)/DAB"% (size, size), basepath+ "/TILES_(%d, %d)/Mask"% (size, size), ignore=ig_f)
 
 # %%
 H_DAB = array([
@@ -116,9 +117,23 @@ def surf(matIn, name="fig", div=(50, 50), SIZE=(8, 6)):
     plt.title(name)
     plt.show()
 
+# folds = ["%03d"%(f+1) for f in range(10)]
+# print(folds)
+
+
+H = H_ki67
+
+
+""" 
+* ! Remember to set H as H_HE when creating labels from HE images!!!
+"""
+
+Hinv = linalg.inv(norm_by_row(H))
 
 for dp in ["ihcs"]:
-    for imname in glob.glob(os.path.join(dpl[dp], '*.tif')):
+    # for globsucks in folds:
+    # print(len(glob.glob(dpl[dp]+ "/" +globsucks + "/*.tif")))
+    for imname in glob.glob(dpl[dp]+ "/*.tif"):
         if dp == "chips":
             continue
             im_hex = cv.imread(imname, cv.CV_32F)
@@ -168,10 +183,6 @@ for dp in ["ihcs"]:
             plt.imsave("lb.png", lbl_toshow)
 
         elif dp == "ihcs":
-
-            H = H_ki67
-            Hinv = linalg.inv(norm_by_row(H))
-
             im_ki67 = cv.imread(imname, cv.CV_32F)
 
             img = cv.cvtColor(im_ki67, cv.COLOR_BGR2RGB)/255
@@ -232,3 +243,5 @@ for dp in ["ihcs"]:
                 guidedDAB *= 0
             plt.imsave(mask_level_dir.replace("IHC", "DAB").replace("_DAB", "_HE"), gd, cmap="gray")
             plt.imsave(mask_level_dir.replace("IHC", "Mask").replace("_Mask", "_HE"), guidedDAB, cmap="gray")
+
+print("Complete")

@@ -8,14 +8,13 @@ import shutil as shu
 
 print("-*"*20)
 target_shape = {'x': 256, 'y': 256}
+orig_shape = {'x': 2048, 'y': 2048}
 
-dataset_name = "TILES"
-orig_path = "/home/cunyuan/DATA/Kimura/%s/" % dataset_name
+dataset_name = "TILES_(%s, %s)" % (orig_shape['x'], orig_shape['y'])
+orig_path = "/home/cunyuan/4tb/Kimura/DATA/%s/" % dataset_name
 print(orig_path)
-target_path = orig_path[:-1] + \
-    "_(%s, %s)" % (target_shape['x'], target_shape['y']) + "/"
+target_path = orig_path.replace("(%s, %s)" % (orig_shape['x'], orig_shape['y']), "(%s, %s)" % (target_shape['x'], target_shape['y']))
 
-# os.makedirs(target_path)
 # Ignoring pattern
 
 def ig_f(dir, files):
@@ -28,7 +27,7 @@ for roots, dirs, files in os.walk(orig_path):
     for file in files:
         filepath = os.path.join(roots, file)
 
-        if (".tif" in filepath):
+        if (".tif" in filepath or ".png" in filepath):
             im_large = cv.imread(filepath)
             orig_shape = {'x': im_large.shape[0], 'y': im_large.shape[1]}
             w_num = orig_shape['x'] // target_shape['x']
@@ -38,7 +37,7 @@ for roots, dirs, files in os.walk(orig_path):
                     chip = im_large[i * target_shape['x']:(i + 1) * target_shape['x'],
                                     j * target_shape['y']:(j + 1) * target_shape['y'],
                                     :]
-                    new_path = roots.replace(dataset_name, dataset_name + "_(%s, %s)" % (target_shape['x'], target_shape['y'])) +\
+                    new_path = roots.replace("(%s, %s)" % (orig_shape['x'], orig_shape['y']), "(%s, %s)" % (target_shape['x'], target_shape['y'])) +\
                                 "/" + os.path.splitext(file)[0] + "(%d, %d)" % (i, j) + ".tif"
                     # print(new_path)
                     # print(roots)
