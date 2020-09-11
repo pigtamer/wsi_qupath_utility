@@ -29,6 +29,7 @@ for roots, dirs, files in os.walk(orig_path):
 
         if (".tif" in filepath or ".png" in filepath):
             im_large = cv.imread(filepath)
+            # ! important: a lower version of 
             # orig_shape = {'x': im_large.shape[0], 'y': im_large.shape[1]} // use true image size instead
             w_num = orig_shape['x'] // target_shape['x']
             h_num = orig_shape['y'] // target_shape['y']
