@@ -208,9 +208,9 @@ Hinv = linalg.inv(norm_by_row(H))
 for dp in ["ihcs"]:
     # for globsucks in folds:
     # print(len(glob.glob(dpl[dp]+ "/" +globsucks + "/*.tif")))
-    print(dpl[dp] + "/*.tif")
+    # print(dpl[dp] + "/*.tif")
     for imname in glob.glob(dpl[dp] + "/*.tif"):
-        print(imname)
+        # print(imname)
         if dp == "chips":
             continue
             im_hex = cv.imread(imname, cv.CV_32F)
