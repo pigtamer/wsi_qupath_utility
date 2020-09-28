@@ -8,7 +8,9 @@ from pathlib import Path
 """
 size = 2048
 HOME_PATH = str(Path.home())
-glob_keyword = HOME_PATH + "/4td/Kimura/DATA/TILES_(%d, %d)/*/*" % (size, size)
+glob_keyword = HOME_PATH + "/4tb/Kimura/DATA/TILES_(%d, %d)/*/*" % (size, size)
 
 for WSIs in glob.glob(glob_keyword):
-    print(glob_keyword)
+    print(WSIs)
+    print("ln -s %s %s"%(WSIs + "/Tiles/Tumor", WSIs + "_tumoronly"))
+    # os.system("ln -s %s %s"%(WSIs + "/Tiles/Tumor", WSIs + "_tumoronly"))
