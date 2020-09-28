@@ -19,12 +19,18 @@ zoom = "1.0"
 
 basepath = "/home/cunyuan/DATA/Kimura"
 basepath = "/home/cunyuan/4tb/Kimura/DATA"
+dpl = {"chips": basepath+ "/TILES_(%d, %d)/HE/*/*/*/" % (size, size),
+       "ihcs": basepath + "/TILES_(%d, %d)/IHC/*/*/*/" % (size, size)}
+       
+"""
+# ! For testing on macbook
 basepath = "/Users/cunyuan/DATA/3768001"
 
 dpl = {
     "chips": basepath + "/TILES_(%d, %d)/HE/*/" % (size, size),
     "ihcs": basepath + "/TILES_(%d, %d)/IHC/*" % (size, size),
 }
+"""
 print(dpl["chips"])
 
 
@@ -336,7 +342,7 @@ for dp in ["ihcs"]:
             if len(np.unique(gd.reshape(-1))) < 5:  # quantitize noise
                 gd *= 0
                 guidedDAB *= 0
-                
+
             plt.imsave(mask_level_dir.replace("IHC", "DAB").replace("_DAB", "_HE"), gd, cmap="gray")
             plt.imsave(mask_level_dir.replace("IHC", "Mask").replace("_Mask", "_HE"), guidedDAB, cmap="gray")
 
