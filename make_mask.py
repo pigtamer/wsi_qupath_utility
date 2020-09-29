@@ -40,6 +40,7 @@ def ig_f(dir, files):
         for f in files
         if (
             os.path.isfile(os.path.join(dir, f))
+            or  ("only" in os.path.join(dir, f)) # 如果之前运行了create_links，在拷贝目录树的时候会把tumor_only作为文件夹拎过来，因此添加这一规则
             and (not ("txt" in os.path.join(dir, f)))
         )
     ]
@@ -282,17 +283,19 @@ for dp in ["ihcs"]:
             # surf(d, "DAB")
             # plt.imshow(rescale_intensity(d, in_range=in_range(d)), cmap="gray")
 
-            h1 = rescale_intensity(h, in_range=in_range(h))
-            d1 = rescale_intensity(d, in_range=in_range(d))
-            # h1= h
-            # d1=d
+            # h1 = rescale_intensity(h, in_range=in_range(h))
+            # d1 = rescale_intensity(d, in_range=in_range(d))
+            h1= h
+            d1=d
 
             """
             # ! DISPLAY SURF4 coparison
             surf4(
-                d,
+                d1,
+                # d,
                 rescale_intensity(d, in_range=in_range(reject_outliers(d))),
-                d,
+                d1,
+                # d,
                 rescale_intensity(d, in_range=in_range(reject_outliers(d))),
                 ["Raw Intensities", 'After rejecting"Outliers"'],
                 SIZE=(10, 10),
@@ -343,12 +346,12 @@ for dp in ["ihcs"]:
                 gd *= 0
                 guidedDAB *= 0
 
-            plt.imsave(mask_level_dir.replace("IHC", "DAB").replace("_DAB", "_HE"), gd, cmap="gray")
-            plt.imsave(mask_level_dir.replace("IHC", "Mask").replace("_Mask", "_HE"), guidedDAB, cmap="gray")
+            # plt.imsave(mask_level_dir.replace("IHC", "DAB").replace("_DAB", "_HE"), gd, cmap="gray")
+            # plt.imsave(mask_level_dir.replace("IHC", "Mask").replace("_Mask", "_HE"), guidedDAB, cmap="gray")
 
-            # plt.figure(figsize=(10, 6))
-            # plt.subplot(121); plt.imshow(gd, cmap = "gray");plt.axis('off')
-            # plt.subplot(122);plt.imshow(guidedDAB, cmap = "gray");plt.axis('off')
-            # plt.show()
+            plt.figure(figsize=(10, 6))
+            plt.subplot(121); plt.imshow(gd, cmap = "gray");plt.axis('off')
+            plt.subplot(122);plt.imshow(guidedDAB, cmap = "gray");plt.axis('off')
+            plt.show()
 
 print("Complete")
