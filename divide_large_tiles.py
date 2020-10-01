@@ -11,7 +11,7 @@ target_shape = {'x': 256, 'y': 256}
 orig_shape = {'x': 2048, 'y': 2048}
 
 dataset_name = "TILES_(%s, %s)" % (orig_shape['x'], orig_shape['y'])
-orig_path = "/home/cunyuan/4tb/Kimura/DATA/%s/" % dataset_name
+orig_path = "/home/cunyuan/4tb/Kimura/DATA/%s/Mask/" % dataset_name
 print(orig_path)
 target_path = orig_path.replace("(%s, %s)" % (orig_shape['x'], orig_shape['y']), "(%s, %s)" % (target_shape['x'], target_shape['y']))
 
