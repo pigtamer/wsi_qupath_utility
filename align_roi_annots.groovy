@@ -157,4 +157,4 @@ ROI transformROI(ROI roi, AffineTransform transform) {
     return RoiTools.getShapeROI(shape2, roi.getImagePlane(), 0.5)
 }
 
-def tile_size = 463.4624 //um
+def tile_size = 463.46240000000000000000 //um

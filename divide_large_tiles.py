@@ -40,7 +40,7 @@ for roots, dirs, files in os.walk(orig_path):
                                     :]
 
                     new_path = roots.replace("(%s, %s)" % (orig_shape['x'], orig_shape['y']), "(%s, %s)" % (target_shape['x'], target_shape['y'])) +\
-                                "/" + os.path.splitext(file)[0] + "(%d, %d)" % (i, j) + ".tif"
+                                "/" + os.path.splitext(file)[0] + "(%d, %d)" % (i, j) + ".png"
                     # print(new_path)
                     # print(roots)
                     if not (os.path.exists(new_path)):
