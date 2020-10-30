@@ -5,17 +5,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os, sys, glob
 
-w_tar, h_tar = 2048, 2048
+w_tar, h_tar = 256, 256
 size = w_tar
 
 basepath = "/home/cunyuan/4tb/Kimura/DATA"
 
-dpl = {"IHC": basepath+ "/TILES_(%d, %d)/DAB/*/*/*/*/" % (size, size),
-       "Mask": basepath + "/TILES_(%d, %d)/Mask/*/*/*/*/" % (size, size)}
+dpl = {"DAB": basepath+ "/TILES_(%d, %d)/DAB/*/*/*/*/" % (size, size),
+       "Mask": basepath + "/TILES_(%d, %d)/Mask/*/*/Tumor/*/" % (size, size),
+       "HE": basepath + "/TILES_(%d, %d)/HE/*/*/*/*/" % (size, size),
+       "IHC": basepath + "/TILES_(%d, %d)/IHC/*/*/*/*/" % (size, size)}
 
-basepath = "/Users/cunyuan/Downloads"
+""" basepath = "/Users/cunyuan/Downloads"
 dpl = {"IHC": basepath+ "/DAB/*/*/Tumor/*/",
-       "Mask": basepath + "/Mask/*/*/Tumor/*/"}
+       "Mask": basepath + "/Mask/*/*/Tumor/*/"} """
 # dpl = [for x in dpl]
 
 k = 0
