@@ -93,3 +93,98 @@ plt.show()
 
 print(k)
 # %%
+""" 
+# Threshold analysis
+L = np.load("/Users/cunyuan/Downloads/pratio256.npy")
+Ln = np.log10([len(L[L>x]) for x in np.linspace(0,1,1000)])
+Lm = np.array([L[L>x].mean() for x in np.linspace(0, 1, 1000)]) 
+
+fig=plt.figure(figsize=(8,8), dpi=300) 
+ax1 = fig.subplots() 
+ax2  =ax1.twinx() 
+# Major ticks every 20, minor ticks every 5 
+major_ticks = np.arange(0, 1000, 100) 
+minor_ticks = np.arange(0, 1000, 10) 
+
+ax1.plot(np.linspace(0,1,1000), np.log10([len(L[L>x]) for x in np.linspace(0,1,1000)]), 'r') 
+
+xlim = np.max(1.01) 
+ylim = np.log10([len(L[L>x]) for x in np.linspace(0,1,1000)])[0] 
+ylim += ylim *0.1 
+
+# ax1.set_xticks(major_ticks*xlim/1010) 
+ax1.set_xticks(minor_ticks*xlim/1010, minor=True) 
+# ax1.set_yticks(major_ticks*ylim/1100) 
+ax1.set_yticks(minor_ticks*ylim/1100, minor=True) 
+
+ax2.plot(np.linspace(0,1,1000), Lm) 
+# ax1.plot([0.41, 0.41], [0, 4.46], 'k--') 
+# ax2.plot([0.41, 1], [0.5, 0.5], 'b--') 
+# ax1.plot([0,0.41],[4.46, 4.46], 'r--') 
+xlim = np.max(1.01) 
+ylim = 1 
+ylim += ylim*0.1 
+
+ax2.set_xticks(major_ticks*xlim/1010) 
+ax2.set_xticks(minor_ticks*xlim/1010, minor=True) 
+ax2.set_yticks(major_ticks*ylim/1100) 
+ax2.set_yticks(minor_ticks*ylim/1100, minor=True) 
+
+# Or if you want different settings for the grids: 
+ax1.grid(which='minor', alpha=0.2) 
+ax1.grid(which='major', alpha=0.5) 
+# And a corresponding grid 
+# ax.grid(which='both') 
+# Or if you want different settings for the grids: 
+ax2.grid(which='minor', alpha=0.2) 
+ax2.grid(which='major', alpha=0.5) 
+
+ax1.set_ylabel("Log10 of sample #", color = "r") 
+ax2.set_ylabel("Mean of (+) ratio", color="b") 
+ax1.set_xlabel("(+) pixel threshold") 
+plt.tight_layout() 
+# plt.title("# of samples remaining vs. balancing threshold") 
+"""
+#%%
+fig = plt.figure(figsize=(16,16), dpi=300) 
+ax = plt.subplot(2,2,1) 
+bm1 = sqrt(Lm *(1-Lm))*Lm*10**Ln 
+plt.plot(bm1) 
+plt.grid() 
+plt.tight_layout()
+plt.xlabel("(+) ratio thresh") 
+plt.ylabel("sqrt(Lm *(1-Lm))*Lm*10**Ln") 
+bm1[np.isnan(bm1)] = 0 
+print(bm1.argmax())
+
+ax = plt.subplot(2,2,2) 
+bm1 = sqrt(Lm *(1-Lm))*np.log10(Lm*10**Ln) 
+plt.plot(bm1) 
+plt.grid() 
+plt.tight_layout()
+plt.xlabel("(+) ratio thresh") 
+plt.ylabel("sqrt(Lm *(1-Lm))*(Ln + log10(Lm))") 
+bm1[np.isnan(bm1)] = 0 
+print(bm1.argmax())
+
+ax = plt.subplot(2,2,3) 
+bm1 = Lm *(1-Lm)
+plt.plot(bm1)
+plt.grid() 
+plt.tight_layout()
+plt.xlabel("(+) ratio thresh") 
+plt.ylabel("sqrt(Lm *(1-Lm))*Lm*Ln") 
+bm1[np.isnan(bm1)] = 0 
+print(bm1.argmax())
+
+ax = plt.subplot(2,2,4)
+bm1 = Lm*10**Ln 
+plt.plot(bm1) 
+plt.tight_layout()
+plt.grid() 
+plt.xlabel("(+) ratio thresh") 
+plt.ylabel("(+) amount)") 
+bm1[np.isnan(bm1)] = 0 
+print(bm1.argmax())
+
+# %%
