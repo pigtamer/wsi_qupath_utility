@@ -6,7 +6,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.axes3d import Axes3D #--- For 3D plot
 import cv2 as cv
-# %%
+
+
+np.set_printoptions(precision=4)
+
+# %%%%%%%%%%%%%%%%%%%%% Tools %%%%%%%%%%%%%%%%%%%%%
 def surf(matIn, name="fig", div = (10, 10), SIZE = (8, 6)):
     x = np.arange(0, matIn.shape[0])
     y = np.arange(0, matIn.shape[1])
@@ -46,14 +50,26 @@ def get_iou(boxA, boxB, mode="Delta"):
 
     # return the intersection over union value
     return iou
+
+
+
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # json polygon dets file
-WORK_PATH = "/Users/cunyuan/DATA/Kimura/qupath-proj/dets-json/eval/"
+WORK_PATH = "/Users/cunyuan/DATA/Kimura/qupath-proj/dets-json/eval/" # new
+WORK_PATH = "/Users/cunyuan/DATA/ji1024_orig/qupath_oldeval_LI/json/" # old
+
+
 FLAG_ONLY_TRUE = 0
+
+
+
 for JSON_PATH in glob.glob(WORK_PATH + "*DIG*json"):
-    id_strsecpoint = str.find(JSON_PATH, "Ki67")
-    thisid = JSON_PATH[id_strsecpoint-5: id_strsecpoint-1]
+    if "old" in WORK_PATH:
+        thisid = JSON_PATH
+    else:
+        id_strsecpoint = str.find(JSON_PATH, "Ki67")
+        thisid = JSON_PATH[id_strsecpoint-5: id_strsecpoint-1]
     #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     with open(JSON_PATH, 'r') as f:
             dets_list = json.load(f)
@@ -113,7 +129,7 @@ for JSON_PATH in glob.glob(WORK_PATH + "*DIG*json"):
 
     #%%%%%%%%%%
     # set a hard thresh of iou for assigning TP
-    HARD_THRESH = 0.5
+    HARD_THRESH = 0.3
     iou_table = np.zeros((len(rf), len(rg)))
     for k in range(len(rf)):
         # calc and sort iou, take max
@@ -123,7 +139,8 @@ for JSON_PATH in glob.glob(WORK_PATH + "*DIG*json"):
     iou_table = np.array(iou_table)
     #%%%%%%%%
     iou_table *= np.double(iou_table> HARD_THRESH)
-    # surf(iou_table)
+    surf(iou_table)
+
     # #%%%%%%%%%%
     # plt.figure(figsize=(4,4), dpi=300)
     # plt.imshow(iou_table, cmap="gray")
@@ -131,7 +148,6 @@ for JSON_PATH in glob.glob(WORK_PATH + "*DIG*json"):
     # plt.tight_layout();plt.axis('off')
     # plt.show()
 
-    # surf(iou_table)
     # %%
     assign_lbl = np.zeros((iou_table.shape[0],))
     while iou_table.max() != 0:
@@ -148,5 +164,3 @@ for JSON_PATH in glob.glob(WORK_PATH + "*DIG*json"):
     iou_table.shape[0], "\t", 
     iou_table.shape[1], "\t", 
     )
-    
-    # %%

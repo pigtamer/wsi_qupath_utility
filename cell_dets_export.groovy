@@ -2,13 +2,14 @@
 
 import static qupath.lib.gui.scripting.QPEx.*
 import com.google.gson.GsonBuilder
-import qupath.lib.gui.tools.MeasurementExporter
+import static qupath.lib.gui.scripting.QPEx.*
 
+def ImgName = getProjectEntry().getImageName()
 def cells = getCellObjects()
 
 boolean prettyPrint = true
 def gson = GsonTools.getInstance(prettyPrint)
-File file = new File('/Users/cunyuan/7930.json')
+File file = new File('/Users/cunyuan/'+ImgName+'.json')
 file.withWriter('UTF-8') {
     gson.toJson(cells,it)
 }
