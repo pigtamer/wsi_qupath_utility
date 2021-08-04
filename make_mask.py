@@ -1,3 +1,4 @@
+#%%
 import numpy as np
 import shutil as shu
 from numpy import *
@@ -19,9 +20,11 @@ zoom = "1.0"
 
 basepath = "/home/cunyuan/DATA/Kimura"
 basepath = "/home/cunyuan/4tb/Kimura/DATA"
-dpl = {"chips": basepath+ "/TILES_(%d, %d)/HE/*/*/*/" % (size, size),
-       "ihcs": basepath + "/TILES_(%d, %d)/IHC/*/*/*/" % (size, size)}
-       
+dpl = {
+    "chips": basepath + "/TILES_(%d, %d)/HE/*/*/*/" % (size, size),
+    "ihcs": basepath + "/TILES_(%d, %d)/IHC/*/*/*/" % (size, size),
+}
+
 """
 # ! For testing on macbook
 basepath = "/Users/cunyuan/DATA/3768001"
@@ -40,7 +43,9 @@ def ig_f(dir, files):
         for f in files
         if (
             os.path.isfile(os.path.join(dir, f))
-            or  ("only" in os.path.join(dir, f)) # 如果之前运行了create_links，在拷贝目录树的时候会把tumor_only作为文件夹拎过来，因此添加这一规则
+            or (
+                "only" in os.path.join(dir, f)
+            )  # 如果之前运行了create_links，在拷贝目录树的时候会把tumor_only作为文件夹拎过来，因此添加这一规则
             and (not ("txt" in os.path.join(dir, f)))
         )
     ]
@@ -165,7 +170,8 @@ def surf2(mat1, mat2, name=["1", "2"], div=(50, 50), SIZE=(8, 4)):
     plt.tight_layout()
     plt.show()
 
-def surf4(im1, im2, mat1, mat2, name=["1", "2"], div=(50, 50), SIZE=(10,10)):
+
+def surf4(im1, im2, mat1, mat2, name=["1", "2"], div=(50, 50), SIZE=(10, 10)):
     x1 = np.arange(0, mat1.shape[0])
     y1 = np.arange(0, mat1.shape[1])
     x1, y1 = np.meshgrid(y1, x1)
@@ -177,11 +183,13 @@ def surf4(im1, im2, mat1, mat2, name=["1", "2"], div=(50, 50), SIZE=(10,10)):
     fig = plt.figure(figsize=SIZE)
     # pax1 = plt.subplot(121)
     ax = fig.add_subplot(2, 2, 1)
-    ax.imshow(im1, cmap = "gray");plt.axis('off')
+    ax.imshow(im1, cmap="gray")
+    plt.axis("off")
     plt.title(name[0])
     plt.tight_layout()
     ax = fig.add_subplot(2, 2, 2)
-    ax.imshow(im2, cmap = "gray");plt.axis('off')
+    ax.imshow(im2, cmap="gray")
+    plt.axis("off")
     plt.title(name[1])
     plt.tight_layout()
     ax = fig.add_subplot(2, 2, 3, projection="3d")
@@ -193,6 +201,8 @@ def surf4(im1, im2, mat1, mat2, name=["1", "2"], div=(50, 50), SIZE=(10,10)):
     # plt.title(name[1])
     plt.tight_layout()
     plt.show()
+
+
 # folds = ["%03d"%(f+1) for f in range(10)]
 # print(folds)
 
@@ -285,8 +295,8 @@ for dp in ["ihcs"]:
 
             # h1 = rescale_intensity(h, in_range=in_range(h))
             # d1 = rescale_intensity(d, in_range=in_range(d))
-            h1= h
-            d1=d
+            h1 = h
+            d1 = d
 
             """
             # ! DISPLAY SURF4 coparison
@@ -301,7 +311,7 @@ for dp in ["ihcs"]:
                 SIZE=(10, 10),
             )
             """
-        
+
             d2 = (d1 * 255).astype(uint8)
 
             guide = d2
@@ -350,8 +360,12 @@ for dp in ["ihcs"]:
             # plt.imsave(mask_level_dir.replace("IHC", "Mask").replace("_Mask", "_HE"), guidedDAB, cmap="gray")
 
             plt.figure(figsize=(10, 6))
-            plt.subplot(121); plt.imshow(gd, cmap = "gray");plt.axis('off')
-            plt.subplot(122);plt.imshow(guidedDAB, cmap = "gray");plt.axis('off')
+            plt.subplot(121)
+            plt.imshow(gd, cmap="gray")
+            plt.axis("off")
+            plt.subplot(122)
+            plt.imshow(guidedDAB, cmap="gray")
+            plt.axis("off")
             plt.show()
 
 print("Complete")

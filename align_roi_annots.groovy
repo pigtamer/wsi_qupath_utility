@@ -4,7 +4,6 @@
 
  注意：只要运行一次即可，无需“对整个项目运行”。
 
-
  本脚本将 Qupath 的多边形形标注做批量变换，用来原封不动地复制HE和IHC染色图像上的标注对象
  比如：在H&E片子上做了标注，那么：
  1. 先计算H&E和IHC之间的变换
@@ -12,6 +11,8 @@
  这样，我们得到的标注在空间位置上是对齐的。之后再运行tile导出脚本即可
  More info on custom scripting: 修改自：
  https://gist.github.com/Svidro/5829ba53f927e79bb6e370a6a6747cfd
+
+ # @ JI Cunyuan
  */
 
 import qupath.lib.objects.PathCellObject

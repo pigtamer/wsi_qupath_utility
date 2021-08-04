@@ -6,10 +6,10 @@ import static qupath.lib.gui.scripting.QPEx.*
 
 def ImgName = getProjectEntry().getImageName()
 def cells = getCellObjects()
-
-boolean prettyPrint = true
-def gson = GsonTools.getInstance(prettyPrint)
-File file = new File('/Users/cunyuan/'+ImgName+'.json')
-file.withWriter('UTF-8') {
-    gson.toJson(cells,it)
-}
+if (ImgName.contains("IHC")|false){
+    boolean prettyPrint = true
+    def gson = GsonTools.getInstance(prettyPrint)
+    File file = new File('/Users/cunyuan/DATA/Kimura/qupath-proj/dets-json/eval-tbm-inter-cross/'+ImgName+'.json')
+    file.withWriter('UTF-8') {
+        gson.toJson(cells,it)
+    }}
