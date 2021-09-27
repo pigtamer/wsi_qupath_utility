@@ -56,7 +56,7 @@ def get_iou(boxA, boxB, mode="Delta"):
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # json polygon dets file
-WORK_PATH = "/Users/cunyuan/DATA/Kimura/qupath-proj/dets-json/evalnoli121/" # new
+WORK_PATH = "/Users/cunyuan/DATA/Kimura/qupath-proj/dets-json/eval-loocv/" # new
 # WORK_PATH = "/Users/cunyuan/DATA/ji1024_orig/qupath_oldeval_LI/json/" # old
 
 
