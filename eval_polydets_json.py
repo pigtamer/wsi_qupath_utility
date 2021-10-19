@@ -56,7 +56,7 @@ def get_iou(boxA, boxB, mode="Delta"):
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # json polygon dets file
-WORK_PATH = "/Users/cunyuan/DATA/Kimura/qupath-proj/dets-json/eval-loocv/" # new
+WORK_PATH = "/Users/cunyuan/DATA/Kimura/qupath-proj/dets-json/eval-intra/" # new
 # WORK_PATH = "/Users/cunyuan/DATA/ji1024_orig/qupath_oldeval_LI/json/" # old
 
 
@@ -150,8 +150,7 @@ for k in range(53):
     for k in range(len(rf)):
         # calc and sort iou, take max
         for j in range(len(rg)):
-            iou_table[k,j] = get_iou(list(rf[k]),
-                                    list(rg[j]))
+            iou_table[k,j] = get_iou(list(rf[k]),                                     list(rg[j]))
     iou_table = np.array(iou_table)
     #%%%%%%%%
     iou_table *= np.double(iou_table> HARD_THRESH)
@@ -187,59 +186,8 @@ for k in range(53):
     )
     l1.append(np.sum(lblg))
     l2.append(len(lblg))
-idx = [5,
-3,
-0,
-4,
-1,
-2,
-15,
-12,
-16,
-13,
-14,
-17,
-47,
-48,
-49,
-50,
-51,
-52,
-33,
-34,
-30,
-31,
-32,
-18,
-19,
-20,
-21,
-22,
-23,
-41,
-42,
-43,
-44,
-45,
-46,
-6,
-7,
-8,
-9,
-10,
-11,
-24,
-27,
-26,
-25,
-28,
-29,
-40,
-37,
-36,
-38,
-39,
-35,]
+idx = [5, 3, 0, 4, 1, 2, 15, 12, 16, 13, 14, 17, 47, 48, 49, 50, 51, 52, 33, 34, 30, 31, 32, 18, 19, 20, 21, 22, 23, 41, 42, 43, 44, 45, 46, 6, 7, 8, 9, 10, 11, 24, 27, 26, 25, 28, 29, 40, 37, 36, 38, 39, 35,]
 k=0
 for k in idx:
     print(k, ",\t", l1[k],  ",\t", l2[k])
+

@@ -6,7 +6,8 @@ import javax.imageio.ImageIO
 import java.awt.Color
 import java.awt.image.BufferedImage
 
-
+import qupath.lib.roi.RectangleROI
+import qupath.lib.objects.PathAnnotationObject
 import qupath.lib.objects.PathCellObject
 import qupath.lib.objects.PathDetectionObject
 import qupath.lib.objects.PathObject
@@ -47,49 +48,59 @@ def he2ihcTransMatrices = [
                              0.0000, 1.0000, 1468.9137] //ok
 ]
 
+def roiSize = 64
 
-WSI_ID = '01_17-7885_Ki67_'
-def ihcAnnotImgName = WSI_ID + 'IHC.ndpi'
-def heTargetImgName = WSI_ID + 'HE.ndpi'
+for (WSI_ID in he2ihcTransMatrices.keySet()) {
+    def ihcAnnotImgName = WSI_ID + 'IHC.ndpi'
+    def heTargetImgName = WSI_ID + 'HE.ndpi'
 
-def matrix = he2ihcTransMatrices[WSI_ID]
+    def matrix = he2ihcTransMatrices[WSI_ID]
 
 
-def imageData = getCurrentImageData()
-def server = imageData.getServer()
-def ImgName = getProjectEntry().getImageName()
-def cells = getCellObjects()
+    def imageData = project.getImageList().find { it.getImageName() == ihcAnnotImgName }.readImageData()
+    def server = imageData.getServer()
+    def ImgName = getProjectEntry().getImageName()
+    if (ImgName != ihcAnnotImgName) {continue}
+    def cells = getCellObjects()
 
-def he_entry = project.getImageList().find { it.getImageName() == heTargetImgName }
-def heData = he_entry.readImageData()
-def heserver = heData.getServer()
+    def he_entry = project.getImageList().find { it.getImageName() == heTargetImgName }
+    def heData = he_entry.readImageData()
+    def heserver = heData.getServer()
 
-// TODO: 限定在打标签的采样区域。和之前的tumor标记同
+    // TODO: 限定在打标签的采样区域。和之前的tumor标记同
 
-k=0
-for (cell in cells) {
-    roi = cell.getROI()
-    double cx = roi.getCentroidX()
-    double cy = roi.getCentroidY()
-    print("x: ${cx}, y: ${cy}")
+    k=0
+    // Detect the cells in desired regions in advance
+    // 预先完成ROI中的细胞检测。只会对检测对象进行操作
+    new File("/Users/cunyuan/DATA/${WSI_ID}").mkdirs()
+    for (cell in cells) {
+        roi = cell.getROI()
+        double cx = roi.getCentroidX()
+        double cy = roi.getCentroidY()
+        print("x: ${cx}, y: ${cy}")
 
-    requestedTile = RegionRequest.createInstance(server.getPath(), 1, roi)
-    // 格式化输出文件名。请按需修改
-    // 原始ROI（无重叠）
-    name = "/Users/cunyuan/DATA/tmp/${k}i.tif".toString()
-    print(roi)
-    writeImageRegion(server, requestedTile, name) //保存
+        // 格式化输出文件名。请按需修改
+        // 原始ROI（无重叠）
+        name = "/Users/cunyuan/DATA/${WSI_ID}/${k}i.tif".toString()
+        def roi = new RectangleROI(cx, cy, roiSize, roiSize)
+        print(roi)
 
-    def transform = new AffineTransform(
-        matrix[0] as double, matrix[3] as double, matrix[1] as double,
-        matrix[4] as double, matrix[2] as double, matrix[5] as double
-    )
-    transform = transform.createInverse()
-    roi1 = transformROI(roi, transform)
-    requestedTile = RegionRequest.createInstance(server.getPath(), 1, roi1)
-    name = "/Users/cunyuan/DATA/tmp/${k}h.tif".toString()
-    writeImageRegion(heserver, requestedTile, name) //保存
-    k = k+1
+        requestedTile = RegionRequest.createInstance(server.getPath(), 1, roi)
+
+        writeImageRegion(server, requestedTile, name) //保存
+
+        def transform = new AffineTransform(
+            matrix[0] as double, matrix[3] as double, matrix[1] as double,
+            matrix[4] as double, matrix[2] as double, matrix[5] as double
+        )
+        transform = transform.createInverse()
+        roi1 = transformROI(roi, transform)
+        requestedTile = RegionRequest.createInstance(server.getPath(), 1, roi1)
+        name = "/Users/cunyuan/DATA/${WSI_ID}/${k}h.tif".toString()
+        print(name)
+        writeImageRegion(heserver, requestedTile, name) //保存
+        k = k+1
+    }
 }
 
 /**

@@ -19,18 +19,20 @@ clearDetections()  //Just in case, so that the first detection list won't end up
 
 for (annotation in annotations)
 {
-hierarchy.getSelectionModel().clearSelection();
-selectObjects{p -> p == annotation}
-//**********************************************************************
-//REPLACE THIS PART WITH YOUR OWN DETECTION CREATION SCRIPT
+    if (annotation.getProperties().get('displayedName') == "Kimura_sample"){
+        hierarchy.getSelectionModel().clearSelection();
+        selectObjects{p -> p == annotation}
+        //**********************************************************************
+        //REPLACE THIS PART WITH YOUR OWN DETECTION CREATION SCRIPT
 
-runPlugin('qupath.imagej.detect.cells.PositiveCellDetection', '{"detectionImageBrightfield": "Optical Density Sum"}');
+        runPlugin('qupath.imagej.detect.cells.PositiveCellDetection', '{"detectionImageBrightfield": "Optical Density Sum"}');
 
-//************************************************************************
+        //************************************************************************
 
-// saveDetectionMeasurements(project+" "+i+"detections.txt",)
-i+=1
-// clearDetections()
+        // saveDetectionMeasurements(project+" "+i+"detections.txt",)
+        i+=1
+        // clearDetections()
+    }
 }
 
 //Potentially replace all of the detections for viewing, after finishing the export
