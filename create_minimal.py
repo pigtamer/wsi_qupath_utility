@@ -5,10 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os, sys, glob, shutil as shu
 
-th = 0.25
+th = 0.16
 size =256
 
-basepath = "/home/cunyuan/4tb/Kimura/DATA"
+basepath = "/raid/ji/DATA/"
 
 dpl = {
        "HE": basepath + "/TILES_(%d, %d)/HE/*/*/*/*/" % (size, size),

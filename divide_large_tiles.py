@@ -7,11 +7,11 @@ import os
 import shutil as shu
 
 print("-*"*20)
-target_shape = {'x': 256, 'y': 256}
+target_shape = {'x': 64, 'y': 64}
 orig_shape = {'x': 2048, 'y': 2048}
 
 dataset_name = "TILES_(%s, %s)" % (orig_shape['x'], orig_shape['y'])
-orig_path = "/home/cunyuan/4tb/Kimura/DATA/%s/" % dataset_name
+orig_path = "/raid/ji/DATA/%s/" % dataset_name
 print(orig_path)
 target_path = orig_path.replace("(%s, %s)" % (orig_shape['x'], orig_shape['y']), "(%s, %s)" % (target_shape['x'], target_shape['y']))
 
@@ -23,10 +23,11 @@ def ig_f(dir, files):
 if not (os.path.exists(target_path)):
     shu.copytree(orig_path, target_path, ignore=ig_f)
 
-for imtype in ["IHC", "HE", "Mask", "DAB"]:
+for imtype in [ "HE", "Mask"]:
     for roots, dirs, files in os.walk(orig_path + imtype + "/"):
         for file in files:
             filepath = os.path.join(roots, file)
+            if not ("Tumor" in filepath): continue 
 
             if (".tif" in filepath or ".png" in filepath):
                 im_large = cv.imread(filepath)

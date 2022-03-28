@@ -7,13 +7,19 @@ import os, sys, glob
 
 w_tar, h_tar = 256, 256
 size = w_tar
+cus_th = "_0.25"
+cus_th = ""
 
-basepath = "/home/cunyuan/4tb/Kimura/DATA"
+basepath = "/raid/ji/DATA"
 
-dpl = {"DAB": basepath+ "/TILES_(%d, %d)/DAB/*/*/*/*/" % (size, size),
-       "Mask": basepath + "/TILES_(%d, %d)/Mask/*/*/Tumor/*/" % (size, size),
-       "HE": basepath + "/TILES_(%d, %d)/HE/*/*/*/*/" % (size, size),
-       "IHC": basepath + "/TILES_(%d, %d)/IHC/*/*/*/*/" % (size, size)}
+casedict = {"1-1": 0, "1-2": 0, "1-3": 0,
+       "2-1": 0, "2-2": 0, "2-3": 0,
+       "3-1": 0, "3-2": 0, "3-3": 0,}
+       
+dpl = {"DAB": basepath+ "/TILES_(%d, %d)%s/DAB/*/*/*/*/" % (size, size, cus_th),
+       "Mask": basepath + "/TILES_(%d, %d)%s/Mask/*/*/Tumor/*/" % (size, size, cus_th),
+       "HE": basepath + "/TILES_(%d, %d)%s/HE/*/*/*/*/" % (size, size, cus_th),
+       "IHC": basepath + "/TILES_(%d, %d)%s/IHC/*/*/*/*/" % (size, size, cus_th)}
 
 """ basepath = "/Users/cunyuan/Downloads"
 dpl = {"IHC": basepath+ "/DAB/*/*/Tumor/*/",
@@ -23,10 +29,10 @@ dpl = {"IHC": basepath+ "/DAB/*/*/Tumor/*/",
 k = 0
 l = []
 dp = "Mask"
-
+print(dpl["IHC"])
 #%%
 for m in glob.glob(dpl[dp] + "/*.png") + glob.glob(dpl[dp] + "/*.tif"):
-    # print(c,d,m,n)
+#     print(c,d,m,n)
     k+=1
     imm = cv.imread(m).astype(np.uint8)
     imm = cv.cvtColor(imm, cv.COLOR_BGR2GRAY)/255
