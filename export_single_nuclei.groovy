@@ -82,7 +82,7 @@ for (WSI_ID in he2ihcTransMatrices.keySet()) {
         // 格式化输出文件名。请按需修改
         // 原始ROI（无重叠）
         name = "/Users/cunyuan/DATA/${WSI_ID}/${k}i.tif".toString()
-        def roi = new RectangleROI(cx, cy, roiSize, roiSize)
+        def roi = new RectangleROI(cx-roiSize/2, cy-roiSize/2, roiSize, roiSize)
         print(roi)
 
         requestedTile = RegionRequest.createInstance(server.getPath(), 1, roi)
