@@ -1,9 +1,18 @@
 /**
  * Script to transfer QuPath objects from one image to another, applying an AffineTransform to any ROIs.
  Get the transform matrix from qupath interactive alignment
- * 将 Qupath 的集合形标注做变换，用来原封不动地复制HE和IHC染色图像上的标注对象
+
+ 注意：只要运行一次即可，无需“对整个项目运行”。
+
+ 本脚本将 Qupath 的多边形形标注做批量变换，用来原封不动地复制HE和IHC染色图像上的标注对象
+ 比如：在H&E片子上做了标注，那么：
+ 1. 先计算H&E和IHC之间的变换
+ 2. 修改运行此脚本，即可将H&E上的标注变换到IHC上的正确位置
+ 这样，我们得到的标注在空间位置上是对齐的。之后再运行tile导出脚本即可
  More info on custom scripting: 修改自：
  https://gist.github.com/Svidro/5829ba53f927e79bb6e370a6a6747cfd
+
+ # @ JI Cunyuan
  */
 
 import qupath.lib.objects.PathCellObject
@@ -21,8 +30,22 @@ import static qupath.lib.gui.scripting.QPEx.*
 // Transformation matrix
 // Annotate on IHC, run on HE.
 // Trans. Mat. from HE to IHC. (Align with HE and open IHC)
-// 下面的一组变换是从HE到IHC到变换
+// 下面的一组变换是从HE到IHC到变换.
+// 请将他们替换为你自己从interactive alignment窗口中得到的满意结果
 // 在交互配准窗口中*打开HE图像*后再选定IHC图像
+
+// 写成
+// ‘文件名的相同部分’：[变换矩阵]的格式。
+// 提前把成对的片子重命名成 片子编号_染色方式 这样的格式。
+//          例如: 01_17-7885_Ki67_HE, 01_17-7885_Ki67_IHC
+// 这样后面的代码段会匹配成对的片子做处理，只需要运行一次本脚本，更方便
+
+// ！！！！！！！！！！！！！！！！！！！！！！
+// ！！！！！！！！！！注意！！！！！！！！！！
+// ！！！！！！！！！！！！！！！！！！！！！！
+
+// 最好保证这个变换是纯粹的平移变换。只要含有剪切形变，tile的数目就会不一致，请千万留意
+// （或许可以包含旋转。）
 
 def he2ihcTransMatrices = [
         '01_17-7885_Ki67_': [1.0000, 0.0000, -4110.1113,
@@ -45,12 +68,18 @@ def he2ihcTransMatrices = [
                              0.0000, 1.0000, 1468.9137] //ok
 ]
 
+// QuPath可以给标注打tag.请在圈出ROI annotation之后自己打一下，并把它填在下面列表中
+// 这个脚本只会处理、变换和复制这个列表中列出的组织标注
+// 比如: def displayedNamesList = ['Background glass', 'Tissue']
+
 def displayedNamesList = ['Tumor', 'Blood', 'Healthy Tissue', 'Kimura_sample']
 
 // SET ME! Delete existing objects
+// 要删除已有的标注吗？最好先默认否
 def deleteExisting = true
 
 // SET ME! Change this if things end up in the wrong place
+// 如果你填的变换矩阵方向反了，把这个改成false试试
 def createInverse = true
 
 // Process all HE images in the project.
@@ -58,6 +87,7 @@ for (WSI_ID in he2ihcTransMatrices.keySet()) {
     def matrix = he2ihcTransMatrices[WSI_ID]
 
     // Define image containing the original objects (must be in the current project)
+    // 在这里把“IHC”和“HE”改成你的片子染色方式
     def ihcAnnotImgName = WSI_ID + 'IHC.ndpi'
     def heTargetImgName = WSI_ID + 'HE.ndpi'
 
@@ -157,4 +187,4 @@ ROI transformROI(ROI roi, AffineTransform transform) {
     return RoiTools.getShapeROI(shape2, roi.getImagePlane(), 0.5)
 }
 
-def tile_size = 463.46240000000000000000 //um
+//def tile_size = 463.46240000000000000000 //um

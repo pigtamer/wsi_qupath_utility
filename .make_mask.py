@@ -1,3 +1,4 @@
+#%%
 """original script "ms_data.py"
 makes binary label with HE/IHC input image
 """
