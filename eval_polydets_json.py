@@ -8,6 +8,7 @@ from mpl_toolkits.mplot3d.axes3d import Axes3D #--- For 3D plot
 import cv2 as cv
 
 
+
 np.set_printoptions(precision=2)
 
 # %%%%%%%%%%%%%%%%%%%%% Tools %%%%%%%%%%%%%%%%%%%%%
@@ -56,7 +57,7 @@ def get_iou(boxA, boxB, mode="Delta"):
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # json polygon dets file
-WORK_PATH = "/Users/cunyuan/DATA/Kimura/qupath-proj/dets-json/eval-intra/" # new
+WORK_PATH = "/Users/cunyuan/Library/Mobile Documents/com~apple~CloudDocs/RESULT202207/eval/eval-sam50/" # new
 # WORK_PATH = "/Users/cunyuan/DATA/ji1024_orig/qupath_oldeval_LI/json/" # old
 
 
@@ -109,81 +110,81 @@ for k in range(53):
     polyg = np.array(polyg)
     # g.close()
     
-    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    # Now we have (polyf, lblf), (polyg, lblg)
-    """
-    (1)	Calculate the IoU of the bounding boxes and perform non-maximum suppression with a threshold, e.g., IoU > 0.75.
-    (2)	Label assignment: assign each label bounding box with the prediction having greatest IoU
-    (3)	Remove duplications: for each assigned prediction, only preserve the label with greatest IoU if it overlaps with more than one labels
-    (4)	All other label bounding boxes that overlaps with each prediction are marked as false positives.
-    """
-    if FLAG_ONLY_TRUE==1:
-        polyf = polyf[np.array(lblf) == True]
-        polyg = polyg[np.array(lblg) == True]
-    elif FLAG_ONLY_TRUE==2:
-        polyf = polyf[np.array(lblf) == False]
-        polyg = polyg[np.array(lblg) == False]
-    elif FLAG_ONLY_TRUE==0:
-        pass
-    else:
-        print("ERROR: WHAT KIND OF NUCLEI YOU WANNA SELECT? 2/1/0: -/+/all")
-    # %%
-    rf = [None]*len(polyf)
-    rg = [None]*len(polyg)
-    k = 0
-    for pf in polyf:
-        rf[k] = cv.boundingRect(np.array(pf).astype(np.float32))
-        k+=1
-    k = 0
-    for pg in polyg:
-        rg[k] = cv.boundingRect(np.array(pg).astype(np.float32))
-        k+=1
-    # %%
-    # plt.figure(figsize=(10,10), dpi=300)
-    # for item in rf:
-    #     plt.scatter(item[0], item[1])
-
-    #%%%%%%%%%%
-    # set a hard thresh of iou for assigning TP
-    HARD_THRESH = 0.3
-    iou_table = np.zeros((len(rf), len(rg))) # (dig, phys)
-    for k in range(len(rf)):
-        # calc and sort iou, take max
-        for j in range(len(rg)):
-            iou_table[k,j] = get_iou(list(rf[k]),                                     list(rg[j]))
-    iou_table = np.array(iou_table)
-    #%%%%%%%%
-    iou_table *= np.double(iou_table> HARD_THRESH)
-    # surf(iou_table)
+    # #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    # # Now we have (polyf, lblf), (polyg, lblg)
+    # """
+    # (1)	Calculate the IoU of the bounding boxes and perform non-maximum suppression with a threshold, e.g., IoU > 0.75.
+    # (2)	Label assignment: assign each label bounding box with the prediction having greatest IoU
+    # (3)	Remove duplications: for each assigned prediction, only preserve the label with greatest IoU if it overlaps with more than one labels
+    # (4)	All other label bounding boxes that overlaps with each prediction are marked as false positives.
+    # """
+    # if FLAG_ONLY_TRUE==1:
+    #     polyf = polyf[np.array(lblf) == True]
+    #     polyg = polyg[np.array(lblg) == True]
+    # elif FLAG_ONLY_TRUE==2:
+    #     polyf = polyf[np.array(lblf) == False]
+    #     polyg = polyg[np.array(lblg) == False]
+    # elif FLAG_ONLY_TRUE==0:
+    #     pass
+    # else:
+    #     print("ERROR: WHAT KIND OF NUCLEI YOU WANNA SELECT? 2/1/0: -/+/all")
+    # # %%
+    # rf = [None]*len(polyf)
+    # rg = [None]*len(polyg)
+    # k = 0
+    # for pf in polyf:
+    #     rf[k] = cv.boundingRect(np.array(pf).astype(np.float32))
+    #     k+=1
+    # k = 0
+    # for pg in polyg:
+    #     rg[k] = cv.boundingRect(np.array(pg).astype(np.float32))
+    #     k+=1
+    # # %%
+    # # plt.figure(figsize=(10,10), dpi=300)
+    # # for item in rf:
+    # #     plt.scatter(item[0], item[1])
 
     # #%%%%%%%%%%
-    # plt.figure(figsize=(4,4), dpi=300)
-    # plt.imshow(iou_table, cmap="gray")
-    # plt.title(thisid)
-    # plt.tight_layout();plt.axis('off')
-    # plt.show()
+    # # set a hard thresh of iou for assigning TP
+    # HARD_THRESH = 0.3
+    # iou_table = np.zeros((len(rf), len(rg))) # (dig, phys)
+    # for k in range(len(rf)):
+    #     # calc and sort iou, take max
+    #     for j in range(len(rg)):
+    #         iou_table[k,j] = get_iou(list(rf[k]),                                     list(rg[j]))
+    # iou_table = np.array(iou_table)
+    # #%%%%%%%%
+    # iou_table *= np.double(iou_table> HARD_THRESH)
+    # # surf(iou_table)
 
-    # %%
-    assign_lbl = np.zeros((iou_table.shape[0],))
-    while iou_table.max() != 0:
-        thisx, thisy = np.unravel_index(iou_table.argmax(), iou_table.shape)
-        assign_lbl[thisx] = thisy
-        iou_table[thisx, :] = 0
-        iou_table[:, thisy] = 0
-    # %%
-    thisid = JSON_PATH
-    print(thisid, "\t", 
-    # (assign_lbl>0).sum()/len(assign_lbl), "\t", # precision
-    # (assign_lbl>0).sum()/iou_table.shape[1], "\t", #recall
-    # 2/((len(assign_lbl) + iou_table.shape[1])/(assign_lbl>0).sum()), "\t", 
-    # iou_table.shape[0], "\t", # digital
-    # iou_table.shape[1], "\t", # physical
-    # len(lblf), "\t", 
-    # np.sum(lblf), "\t", 
-    np.sum(lblg), "\t", 
-    len(lblg), "\t", 
-    LI
-    )
+    # # #%%%%%%%%%%
+    # # plt.figure(figsize=(4,4), dpi=300)
+    # # plt.imshow(iou_table, cmap="gray")
+    # # plt.title(thisid)
+    # # plt.tight_layout();plt.axis('off')
+    # # plt.show()
+
+    # # %%
+    # assign_lbl = np.zeros((iou_table.shape[0],))
+    # while iou_table.max() != 0:
+    #     thisx, thisy = np.unravel_index(iou_table.argmax(), iou_table.shape)
+    #     assign_lbl[thisx] = thisy
+    #     iou_table[thisx, :] = 0
+    #     iou_table[:, thisy] = 0
+    # # %%
+    # thisid = JSON_PATH
+    # print(thisid, "\t", 
+    # # (assign_lbl>0).sum()/len(assign_lbl), "\t", # precision
+    # # (assign_lbl>0).sum()/iou_table.shape[1], "\t", #recall
+    # # 2/((len(assign_lbl) + iou_table.shape[1])/(assign_lbl>0).sum()), "\t", 
+    # # iou_table.shape[0], "\t", # digital
+    # # iou_table.shape[1], "\t", # physical
+    # # len(lblf), "\t", 
+    # # np.sum(lblf), "\t", 
+    # np.sum(lblg), "\t", 
+    # len(lblg), "\t", 
+    # LI
+    # )
     l1.append(np.sum(lblg))
     l2.append(len(lblg))
 idx = [5, 3, 0, 4, 1, 2, 15, 12, 16, 13, 14, 17, 47, 48, 49, 50, 51, 52, 33, 34, 30, 31, 32, 18, 19, 20, 21, 22, 23, 41, 42, 43, 44, 45, 46, 6, 7, 8, 9, 10, 11, 24, 27, 26, 25, 28, 29, 40, 37, 36, 38, 39, 35,]
