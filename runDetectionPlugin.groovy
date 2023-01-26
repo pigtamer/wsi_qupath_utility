@@ -19,7 +19,7 @@ clearDetections()  //Just in case, so that the first detection list won't end up
 
 for (annotation in annotations)
 {
-    if (annotation.getProperties().get('displayedName') == "Kimura_sample"){
+    if (annotation.getProperties().get('displayedName') != "Kimura_sample"){
         hierarchy.getSelectionModel().clearSelection();
         selectObjects{p -> p == annotation}
         //**********************************************************************
@@ -40,3 +40,5 @@ for (annotation in annotations)
 
 //selectAnnotations()
 //runPlugin('qupath.imagej.detect.nuclei.WatershedCellDetection', '{"detectionImageBrightfield": "Hematoxylin OD",  "requestedPixelSizeMicrons": 0.5,  "backgroundRadiusMicrons": 8.0,  "medianRadiusMicrons": 0.0,  "sigmaMicrons": 1.5,  "minAreaMicrons": 10.0,  "maxAreaMicrons": 400.0,  "threshold": 0.1,  "maxBackground": 2.0,  "watershedPostProcess": true,  "excludeDAB": false,  "cellExpansionMicrons": 5.0,  "includeNuclei": true,  "smoothBoundaries": true,  "makeMeasurements": true}');
+
+

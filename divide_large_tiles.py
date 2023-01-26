@@ -14,7 +14,7 @@ target_shape = {"x": 256, "y": 256}
 orig_shape = {"x": 2048, "y": 2048}
 
 # dataset_name = "TILES_(%s, %s)" % (orig_shape['x'], orig_shape['y'])
-dataset_name = "TILES_PAD"
+dataset_name = "TILES_FULL_2048"
 orig_path = "/wd_0/ji/%s/" % dataset_name
 print(orig_path)
 # target_path = orig_path[:-1].replace("(%s, %s)" % (orig_shape['x'], orig_shape['y']), "(%s, %s)" % (target_shape['x'], target_shape['y']))+"/"

@@ -10,7 +10,7 @@ num_select = 6
 print("-*" * 20)
 orig_shape = {"x": 2048, "y": 2048}
 
-dataset_name = "TILES_PAD"
+dataset_name = "TILES_FULL_2048"
 orig_path = "/wd_0/ji/%s/" % dataset_name
 print(orig_path)
 target_path = orig_path + "/test/"
@@ -35,7 +35,7 @@ for k, case in enumerate(case_list):
     print(orig_path + "HE" + "/*" + case + "*.png")
     assert len(phl) == len(pml) == len(pil)
     idx_range = len(phl)
-    idx_select = np.random.choice(idx_range, 6, replace=False)
+    idx_select = np.random.choice(idx_range, 10, replace=False)
     tlh, tli, tlm = np.array(phl)[idx_select], np.array(pil)[idx_select],np.array(pml)[idx_select]
     tlh = list(tlh)
     tlm = list(tlm)

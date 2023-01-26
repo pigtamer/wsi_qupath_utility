@@ -57,9 +57,9 @@ def get_iou(boxA, boxB, mode="Delta"):
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 # json polygon dets file
-WORK_PATH = "/Users/cunyuan/Library/Mobile Documents/com~apple~CloudDocs/RESULT202207/eval/eval-sam50/" # new
+WORK_PATH = "/wd_0/ji/eval/e2e-6cv/" # new
 # WORK_PATH = "/Users/cunyuan/DATA/ji1024_orig/qupath_oldeval_LI/json/" # old
-
+print(WORK_PATH)
 
 FLAG_ONLY_TRUE = 0 # 0: all nuclei; 1: only evaluate true nuclei; 2: only evaluate false nuclei
 geo = "nucleusGeometry" # "geometry"; "nucleusGeometry"
@@ -68,12 +68,11 @@ FLAG_VIS = 0
 print(geo, "ONLY_TRUE=%s"%FLAG_ONLY_TRUE)
 print("=="*20)
 
-
-# for JSON_PATH in sorted(glob.glob(WORK_PATH + "*json")):
 l1 = []
 l2 = []
-for k in range(53):
-    JSON_PATH = WORK_PATH + "ihc_%s.png.json"%k
+for JSON_PATH in sorted(glob.glob(WORK_PATH + "*json")):
+# for k in range(53):
+    # JSON_PATH = WORK_PATH + "ihc_%s.png.json"%k
     # if "old" in WORK_PATH:
     #     thisid = JSON_PATH
     # else:
@@ -187,8 +186,9 @@ for k in range(53):
     # )
     l1.append(np.sum(lblg))
     l2.append(len(lblg))
-idx = [5, 3, 0, 4, 1, 2, 15, 12, 16, 13, 14, 17, 47, 48, 49, 50, 51, 52, 33, 34, 30, 31, 32, 18, 19, 20, 21, 22, 23, 41, 42, 43, 44, 45, 46, 6, 7, 8, 9, 10, 11, 24, 27, 26, 25, 28, 29, 40, 37, 36, 38, 39, 35,]
-k=0
-for k in idx:
-    print(k, ",\t", l1[k],  ",\t", l2[k])
+    print(JSON_PATH.rsplit("/", 1)[-1].rsplit(".")[0], "\t", np.sum(lblg), "\t", len(lblg))
+#idx = [5, 3, 0, 4, 1, 2, 15, 12, 16, 13, 14, 17, 47, 48, 49, 50, 51, 52, 33, 34, 30, 31, 32, 18, 19, 20, 21, 22, 23, 41, 42, 43, 44, 45, 46, 6, 7, 8, 9, 10, 11, 24, 27, 26, 25, 28, 29, 40, 37, 36, 38, 39, 35,]
+#k=0
+#for k in idx:
+#    print(k, ",\t", l1[k],  ",\t", l2[k])
 
